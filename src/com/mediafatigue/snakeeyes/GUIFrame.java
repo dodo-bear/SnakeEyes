@@ -1,20 +1,17 @@
 package com.mediafatigue.snakeeyes;
 
 import java.awt.Color;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputAdapter;
+import javax.swing.JTextField;
 
-public class GUIFrame extends JFrame implements KeyListener{
+public class GUIFrame extends JFrame{
 	
 	/**
 	 * 
@@ -36,56 +33,54 @@ public class GUIFrame extends JFrame implements KeyListener{
 		
 		JPanel coordsPanel = new JPanel();
 		coordsPanel.setLayout(new BoxLayout(coordsPanel, BoxLayout.Y_AXIS));
-		JLabel instructions = new JLabel("Please select two points with your mouse:");
-		JLabel coordsLabel1 = new JLabel("Point 1: 0, 0");
-		JLabel coordsLabel2 = new JLabel("Point 2: 0, 0");
+		JLabel instructions = new JLabel("Please select two sets of pixel coordinates:");
+		JLabel coordsLabel1 = new JLabel("Point 1: ");
+		JLabel coordsLabel2 = new JLabel("Point 2: ");
+		
+		JPanel coordsPanel1 = new JPanel();
+		JTextField coords1x = new JTextField(6);
+		JTextField coords1y = new JTextField(6);
+		
+		JPanel coordsPanel2 = new JPanel();
+		JTextField coords2x = new JTextField(6);
+		JTextField coords2y = new JTextField(6);
+		
+		IndicatorFrame ind1 = new IndicatorFrame();
+		IndicatorFrame ind2 = new IndicatorFrame();
+		
+		coordsPanel1.add(coordsLabel1);
+		coordsPanel1.add(coords1x);
+		coordsPanel1.add(coords1y);
+		
+		coordsPanel2.add(coordsLabel2);
+		coordsPanel2.add(coords2x);
+		coordsPanel2.add(coords2y);
+		
 		coordsPanel.add(instructions);
-		coordsPanel.add(coordsLabel1);
-		coordsPanel.add(coordsLabel2);
+		coordsPanel.add(coordsPanel1);
+		coordsPanel.add(coordsPanel2);
+		
+		JButton coordSet = new JButton("Set Coordinates");
+		
+		coordSet.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){  
+			            x1 = Integer.parseInt(coords1x.getText());  
+			            x2 = Integer.max(Integer.parseInt(coords2x.getText()), x1);  
+			            y1 = Integer.parseInt(coords1y.getText());  
+			            y2 = Integer.max(Integer.parseInt(coords2y.getText()), y1); 
+			            ind1.goTo(x1, y1);
+			            ind2.goTo(x2, y2);
+			            //MainClass.setSkimmer(new Skimmer(x1, y1, x2, y2, ));
+			        }  
+			    });  
+		
+		coordsPanel.add(coordSet);
 		mainpanel.add(coordsPanel);
 		coordsPanel.setBackground(null);
 		instructions.setForeground(Color.black);
 		coordsLabel1.setForeground(Color.black);
 		coordsLabel2.setForeground(Color.black);
-		mainpanel.addKeyListener(this);
-		System.out.println("Hi from before click");
 		setVisible(true);
-		while(!startedPointing){} //Silly use of a while loop to wait for the MyListener's response
-		coordsLabel1.setText("Point 1: " + x1 + ", " + y1);
-		while(!donePointing){} //Silly use of a while loop to wait for the MyListener's response
-		coordsLabel2.setText("Point 2: " + x2 + ", " + y2);
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		Point arg0 = MouseInfo.getPointerInfo().getLocation();
-		
-		System.out.println("click");
-        int x = (int) arg0.getX();
-        int y = (int) arg0.getY();
-        if(!startedPointing) {
-        	x1 = x;
-        	y1 = y;
-        }
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		Point arg0 = MouseInfo.getPointerInfo().getLocation();
-		
-		System.out.println("click");
-        int x = (int) arg0.getX();
-        int y = (int) arg0.getY();
-        if(!donePointing) {
-        	x2 = x;
-        	y2 = y;
-        }
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }
