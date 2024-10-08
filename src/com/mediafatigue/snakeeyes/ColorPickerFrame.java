@@ -23,35 +23,38 @@ public class ColorPickerFrame extends JFrame{
 	public ColorPickerFrame() {
 		this.setAlwaysOnTop(true);
 		this.setUndecorated(true);
-		this.setBackground(new Color(255, 255, 255, 0));
+		this.setBackground(new Color(255, 255, 255, 255));
 		this.setForeground(Color.RED);
-		//this.setOpacity(0);
-		this.setSize(40, 40);
+		this.setOpacity(1);
+		this.setSize(30, 30);
 		
-		this.setContentPane(new DrawPane());
+		//this.setContentPane(new DrawPane());
 		
 		this.setVisible(true);
 	}
 	
 	public void goTo(int x, int y) {
-		this.setLocation(x, y);
+		this.setLocation(x + 2, y + 2);
+		this.repaint();
 	}
 	
-	class DrawPane extends JPanel {
-        public void paintComponent(Graphics g) {
-        	Robot robot = null;
-			try {
-				robot = new Robot();
-			} catch (AWTException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    		Rectangle area = new Rectangle(0, 0, screenSize.width, screenSize.height);
-    		BufferedImage screenshot = robot.createScreenCapture(area);
-        	g.setColor(new Color(screenshot.getRGB(this.getParent().getLocation().x, this.getParent().getLocation().y)));
-            g.fillRect(0, 0, 10, 10); // Draw on g here e.g.
-        }
-   }
+	public void repaint() {
+		super.repaint();
+		System.out.println("Hi from repaint");
+		Robot robot = null;
+		try {
+			robot = new Robot();
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Rectangle area = new Rectangle(0, 0, screenSize.width, screenSize.height);
+		BufferedImage screenshot = robot.createScreenCapture(area);
+		this.setBackground(new Color(screenshot.getRGB(this.getLocation().x-2, this.getLocation().y-2)));
+		this.setForeground(getBackground());
+		this.getContentPane().setBackground(getBackground());
+		this.getContentPane().setForeground(getForeground());
+	}
 
 }

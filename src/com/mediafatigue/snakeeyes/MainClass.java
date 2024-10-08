@@ -11,6 +11,8 @@ public class MainClass {
 			
 		}
 		
+		System.out.println(sk.getGrid());
+		
 		
 	}
 	
