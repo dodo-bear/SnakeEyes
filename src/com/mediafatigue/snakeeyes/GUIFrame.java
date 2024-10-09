@@ -3,15 +3,17 @@ package com.mediafatigue.snakeeyes;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.mediafatigue.snakeeyes.IndicatorFrame.DrawPane;
 
 public class GUIFrame extends JFrame{
 	
@@ -21,108 +23,132 @@ public class GUIFrame extends JFrame{
 	private static final long serialVersionUID = -3562206526467369967L;
 	private JPanel mainpanel;
 
-	public int x1, y1, x2, y2;
-	Color snakeColor;
-	Color fruitColor;
-	JPanel grid;
+	private int x1, y1, x2, y2, xSize, ySize, headx, heady, direction;
+	private Color snakeColor;
+	private Color fruitColor;
+	private JPanel grid;
+	private JLabel mouseCoords;
 	
-	public GUIFrame(String title){
+	private JTextField coordsHeadx, coordsHeady;
+	
+	private boolean amIRunning;
+	
+	private JLabel[][] labelGrid;
+	
+	public GUIFrame(String title) {
+		amIRunning = false;
+		labelGrid = new JLabel[0][0];
+		grid = new JPanel();
+
+		//JFrame initialization
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(400, 400);
-		grid = new JPanel();
+		setSize(500, 650);
+		
+		//Root panel
 		mainpanel = new JPanel();
 		mainpanel.setBackground(new Color(200, 200, 200));
 		add(mainpanel);
 		
+		mouseCoords = new JLabel("Mouse Coordinates: 0, 0");
+		
 		JPanel coordsPanel = new JPanel();
 		coordsPanel.setLayout(new BoxLayout(coordsPanel, BoxLayout.Y_AXIS));
-		JLabel instructions = new JLabel("Please select two sets of pixel coordinates:");
-		JLabel coordsLabel1 = new JLabel("Point 1: ");
-		JLabel coordsLabel2 = new JLabel("Point 2: ");
-		JLabel coordsLabel3 = new JLabel("Color Picker Coordinates: ");
+		
 		JLabel coordsLabel4 = new JLabel("Grid Size (Rows, Columns): ");
 		
-		JPanel coordsPanel1 = new JPanel();
-		JTextField coords1x = new JTextField(6);
-		JTextField coords1y = new JTextField(6);
-		
-		JPanel coordsPanel2 = new JPanel();
-		JTextField coords2x = new JTextField(6);
-		JTextField coords2y = new JTextField(6);
-		
-		JPanel coordsPanel3 = new JPanel();
-		JTextField coords3x = new JTextField(6);
-		JTextField coords3y = new JTextField(6);
-		
-		JPanel coordsPanel4 = new JPanel();
-		JTextField coords4x = new JTextField(6);
-		JTextField coords4y = new JTextField(6);
-		
-		IndicatorFrame ind1 = new IndicatorFrame();
-		IndicatorFrame ind2 = new IndicatorFrame();
-		
+		//Spawn and configure all the draggable frames
+		IndicatorFrame ind1 = new IndicatorFrame(20, 20);
+		IndicatorFrame ind2 = new IndicatorFrame(10, 10);
+		DrawPane dp = (DrawPane) ind2.getContentPane();
+		dp.setColor(Color.RED);
+		ind2.repaint();
 		ColorPickerFrame cf = new ColorPickerFrame();
-		cf.goTo(0, 0);
+		cf.goTo(50, 50);
+		
+		JPanel skButtonPanel = new JPanel();
+		JButton spawnSkimmer = new JButton("Start Reading Data");
+		skButtonPanel.add(spawnSkimmer);
+
+		//Panel & labels for color display
 		JPanel colorPanel = new JPanel();
 		JLabel colabel1 = new JLabel("Snake Color: ");
 		JLabel colabel2 = new JLabel("Fruit Color: ");
 		JPanel color1 = new JPanel();
 		JPanel color2 = new JPanel();
-		
-		JButton spawnSkimmer = new JButton("Start Reading Data");
-		
 		color1.setPreferredSize(new Dimension(80, 20));
 		color2.setPreferredSize(new Dimension(80, 20));
-		
 		color1.setBackground(Color.BLACK);
 		color2.setBackground(Color.BLACK);
-		
 		colorPanel.add(colabel1);
 		colorPanel.add(color1);
 		colorPanel.add(colabel2);
 		colorPanel.add(color2);
 		
+		//Corner coordinate panels/labels
+		JLabel instructions = new JLabel("Please select two sets of pixel coordinates:");
+		JLabel coordsLabel1 = new JLabel("Point 1: 0, 0");
+		JLabel coordsLabel2 = new JLabel("Point 2: 0, 0");
+		JPanel coordsPanel1 = new JPanel();
 		coordsPanel1.add(coordsLabel1);
-		coordsPanel1.add(coords1x);
-		coordsPanel1.add(coords1y);
-		
+		JPanel coordsPanel2 = new JPanel();
 		coordsPanel2.add(coordsLabel2);
-		coordsPanel2.add(coords2x);
-		coordsPanel2.add(coords2y);
 		
-		coordsPanel3.add(coordsLabel3);
-		coordsPanel3.add(coords3x);
-		coordsPanel3.add(coords3y);
-
+		//Panel for grid size in cells
+		JPanel coordsPanel4 = new JPanel();
+		JTextField coords4x = new JTextField("15", 6);
+		JTextField coords4y = new JTextField("17", 6);
 		coordsPanel4.add(coordsLabel4);
 		coordsPanel4.add(coords4x);
 		coordsPanel4.add(coords4y);
 		
+		//Panel for the snake's head location at start
+		JPanel headCoordsPanel = new JPanel();
+		coordsHeadx = new JTextField("7", 6);
+		coordsHeady = new JTextField("4", 6);
+		JLabel headCoordsLabel = new JLabel("Head Coordinates: ");
+		headCoordsPanel.add(headCoordsLabel);
+		headCoordsPanel.add(coordsHeadx);
+		headCoordsPanel.add(coordsHeady);
+		
+		//Snake starting direction inputs
+		JPanel headDirPanel = new JPanel();
+		JTextField headDir = new JTextField("1", 6);
+		JLabel headDirLabel = new JLabel("Head Direction: (0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT)");
+		headDirPanel.add(headDirLabel);
+		headDirPanel.add(headDir);
+		
+		//Begin stacking into the root panel
+		coordsPanel.add(mouseCoords);
 		coordsPanel.add(instructions);
 		coordsPanel.add(coordsPanel1);
 		coordsPanel.add(coordsPanel2);
 		
+		//Set corner coordinates button/actionlistener
 		JButton coordSet = new JButton("Set Area Coordinates");
-		
+		JPanel coordSetButtonPanel = new JPanel();
+		coordSetButtonPanel.add(coordSet);
 		coordSet.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
-			            x1 = Integer.parseInt(coords1x.getText());  
-			            x2 = Integer.max(Integer.parseInt(coords2x.getText()), x1);  
-			            y1 = Integer.parseInt(coords1y.getText());  
-			            y2 = Integer.max(Integer.parseInt(coords2y.getText()), y1); 
+			            x1 = ind1.getLocation().x;  
+			            x2 = Integer.max(ind2.getLocation().x, x1);  
+			            y1 = ind1.getLocation().y;  
+			            y2 = Integer.max(ind2.getLocation().y, y1); 
 			            ind1.goTo(x1, y1);
 			            ind2.goTo(x2, y2);
-			            //MainClass.setSkimmer(new Skimmer(x1, y1, x2, y2, ));
+			            
+			            coordsLabel1.setText("Point 1: " + x1 + ", " + y1);
+			            coordsLabel2.setText("Point 2: " + x2 + ", " + y2);
 			        }  
 			    });  
 		
+		//Set color buttons
 		JButton pickColor = new JButton("Set Snake Color");
 		JButton pickColor2 = new JButton("Set Fruit Color");
 		
 		pickColor.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
-			            cf.goTo(Integer.parseInt(coords3x.getText()), Integer.parseInt(coords3y.getText()));
+			            cf.repaint();
 			            snakeColor = cf.getBackground();
 			            color1.setBackground(snakeColor);
 			        }  
@@ -130,26 +156,53 @@ public class GUIFrame extends JFrame{
 		
 		pickColor2.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
-			            cf.goTo(Integer.parseInt(coords3x.getText()), Integer.parseInt(coords3y.getText()));
+			            cf.repaint();
 			            fruitColor = cf.getBackground();
 			            color2.setBackground(fruitColor);
 			        }  
 			    });
 		
+		//ActionListener that starts the Skimmer and initializes the grid
 		spawnSkimmer.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
-			            MainClass.setSkimmer(new Skimmer(x1, y1, x2, y2, 5, 5, color1.getBackground(), color2.getBackground()));
+						xSize = Integer.parseInt(coords4x.getText());
+						ySize = Integer.parseInt(coords4y.getText());
+			            MainClass.setSkimmer(new Skimmer(x1, y1, x2, y2, xSize, ySize, color1.getBackground(), color2.getBackground()));
+			            direction = Integer.parseInt(headDir.getText());
+			            headx = Integer.parseInt(coordsHeadx.getText());
+			            heady = Integer.parseInt(coordsHeady.getText());
 			        }  
 			    });
 		
-		coordsPanel.add(coordSet);
+		JPanel runButtonPanel = new JPanel();
+		JButton runButton = new JButton("Start SnakeEyes");
+		runButtonPanel.add(runButton);
+		
+		//Bot on/off button
+		runButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(amIRunning) {
+				 amIRunning = false;
+				} else {
+				FakeKeyboard.clickHere((x2-x1)/2, (y2-y1)/2);
+				FakeKeyboard.rightArrow();
+				amIRunning = true;
+				}
+			}
+		});
+		
+		//Finish stacking all UI elements
+		coordsPanel.add(coordSetButtonPanel);
 		coordsPanel.add(coordsPanel4);
-		coordsPanel.add(coordsPanel3);
 		coordsPanel.add(colorPanel);
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(pickColor);
 		buttonPanel.add(pickColor2);
 		coordsPanel.add(buttonPanel);
+		coordsPanel.add(headCoordsPanel);
+		coordsPanel.add(headDirPanel);
+		coordsPanel.add(skButtonPanel);
+		coordsPanel.add(runButtonPanel);
 		coordsPanel.add(grid);
 		mainpanel.add(coordsPanel);
 		coordsPanel.setBackground(null);
@@ -160,13 +213,72 @@ public class GUIFrame extends JFrame{
 		
 	}
 	
-	public void initGrid(int x, int y, Skimmer sk) {
-		grid = new JPanel();
-        grid.setLayout(new GridLayout(25, 25));
-        for (int i = 0; i < 25; i++) {
-            for (int n = 0; n < 25; n++) {
-                grid.add(new JLabel("" + sk.getGrid()[i][n]));
+	//Generate and store all JLabels in the debug view and flow them into the GridLayout
+	public void initGrid(Skimmer sk) {
+		int x = sk.getGrid().length;
+		int y = sk.getGrid()[0].length;
+		labelGrid = new JLabel[x][y];
+        grid.setLayout(new GridLayout(x, y));
+        for (int i = 0; i < x; i++) {
+            for (int n = 0; n < y; n++) {
+            	labelGrid[i][n] = new JLabel("HI");
+            	grid.add(labelGrid[i][n]);
             }
         }
+	}
+	
+	//Update all debug view JLabels
+	public void refreshGrid(Skimmer sk) {
+		//Row
+		for (int n = 0; n < sk.getGrid().length; n++) {
+			//Column
+            for (int i = 0; i < sk.getGrid()[0].length; i++) {
+                labelGrid[n][i].setText("" + sk.getGrid()[n][i]);
+                labelGrid[n][i].setForeground(sk.getCoGrid()[n][i]);
+            }
+        }
+	}
+	
+	//Update displayed mouse coordinates
+	public void refreshMouseCoords() {
+		mouseCoords.setText("Mouse Coordinates: " + MouseInfo.getPointerInfo().getLocation().getX()+", "+MouseInfo.getPointerInfo().getLocation().getY());
+	}
+	//Update dynamic head coordinate boxes
+	public void refreshHeadCoords(int x, int y) {
+		coordsHeadx.setText(""+x);
+		coordsHeady.setText(""+y);
+	}
+	
+	public int getDirection() {
+		return direction;
+	}
+	
+	public int getHeadX() {
+		return headx;
+	}
+	
+	public int getHeadY() {
+		return heady;
+	}
+	
+	public boolean isRunning() {
+		return amIRunning;
+	}
+	
+	public String toString() {
+	    return "GUIFrame{" +
+	            ", x1=" + x1 +
+	            ", y1=" + y1 +
+	            ", x2=" + x2 +
+	            ", y2=" + y2 +
+	            ", xSize=" + xSize +
+	            ", ySize=" + ySize +
+	            ", headx=" + headx +
+	            ", heady=" + heady +
+	            ", direction=" + direction +
+	            ", snakeColor=" + snakeColor +
+	            ", fruitColor=" + fruitColor +
+	            ", amIRunning=" + amIRunning +
+	            '}';
 	}
 }
