@@ -15,7 +15,7 @@ public class MainClass {
 		
 		//Wait until the user starts the Skimmer via a JButton
 		while(sk == null) {
-			
+			System.out.print("");
 		}
 		
 		//Prepare the grid
