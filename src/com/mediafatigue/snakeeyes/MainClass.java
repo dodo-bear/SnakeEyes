@@ -1,7 +1,6 @@
 package com.mediafatigue.snakeeyes;
 
 import java.awt.AWTException;
-import java.awt.Point;
 
 public class MainClass {
 
@@ -15,7 +14,7 @@ public class MainClass {
 		
 		//Wait until the user starts the Skimmer via a JButton
 		while(sk == null) {
-			
+			System.out.print("");
 		}
 		
 		//Prepare the grid

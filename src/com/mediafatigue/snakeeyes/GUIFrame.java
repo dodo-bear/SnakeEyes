@@ -183,10 +183,12 @@ public class GUIFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				if(amIRunning) {
 				 amIRunning = false;
+				 runButton.setText("Start SnakeEyes");
 				} else {
-				FakeKeyboard.clickHere((x2-x1)/2, (y2-y1)/2);
+				FakeKeyboard.clickHere(((x2-x1)/2)+x1, ((y2-y1)/2)+y1);
 				FakeKeyboard.rightArrow();
 				amIRunning = true;
+				runButton.setText("Stop SnakeEyes");
 				}
 			}
 		});

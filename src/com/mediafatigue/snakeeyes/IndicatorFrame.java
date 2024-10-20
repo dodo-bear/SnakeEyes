@@ -35,6 +35,10 @@ public class IndicatorFrame extends JFrame{
 	
 	//Content pane specifically for color manipulation
 	class DrawPane extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private Color c = Color.GREEN;
         public void paintComponent(Graphics g) {
         	g.setColor(c);

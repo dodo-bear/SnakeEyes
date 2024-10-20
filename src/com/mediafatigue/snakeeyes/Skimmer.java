@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 
 public class Skimmer {
