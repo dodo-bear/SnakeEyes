@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.MouseInfo;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
@@ -12,8 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import com.mediafatigue.snakeeyes.IndicatorFrame.DrawPane;
 
 public class GUIFrame extends JFrame{
 	
@@ -58,11 +57,6 @@ public class GUIFrame extends JFrame{
 		JLabel coordsLabel4 = new JLabel("Grid Size (Rows, Columns): ");
 		
 		//Spawn and configure all the draggable frames
-		IndicatorFrame ind1 = new IndicatorFrame(20, 20);
-		IndicatorFrame ind2 = new IndicatorFrame(10, 10);
-		DrawPane dp = (DrawPane) ind2.getContentPane();
-		dp.setColor(Color.RED);
-		ind2.repaint();
 		ColorPickerFrame cf = new ColorPickerFrame();
 		cf.goTo(50, 50);
 		
@@ -130,7 +124,17 @@ public class GUIFrame extends JFrame{
 		coordSetButtonPanel.add(coordSet);
 		coordSet.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
-			            x1 = ind1.getLocation().x;  
+				
+				Rectangle r = SelectionBox.select();
+				
+				x1 = r.x;
+				x2 = r.x + r.width;
+				y1 = r.y;
+				y2 = r.y + r.height;
+				coordsLabel1.setText("Point 1: " + x1 + ", " + y1);
+	            coordsLabel2.setText("Point 2: " + x2 + ", " + y2);
+				
+			           /* x1 = ind1.getLocation().x;  
 			            x2 = Integer.max(ind2.getLocation().x, x1);  
 			            y1 = ind1.getLocation().y;  
 			            y2 = Integer.max(ind2.getLocation().y, y1); 
@@ -138,7 +142,7 @@ public class GUIFrame extends JFrame{
 			            ind2.goTo(x2, y2);
 			            
 			            coordsLabel1.setText("Point 1: " + x1 + ", " + y1);
-			            coordsLabel2.setText("Point 2: " + x2 + ", " + y2);
+			            coordsLabel2.setText("Point 2: " + x2 + ", " + y2);*/
 			        }  
 			    });  
 		
@@ -184,7 +188,7 @@ public class GUIFrame extends JFrame{
 				if(amIRunning) {
 				 amIRunning = false;
 				} else {
-				FakeKeyboard.clickHere((x2-x1)/2, (y2-y1)/2);
+				FakeKeyboard.clickHere((x2-x1)/2 + x1, (y2-y1)/2 + y1);
 				FakeKeyboard.rightArrow();
 				amIRunning = true;
 				}

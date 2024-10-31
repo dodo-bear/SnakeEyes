@@ -1,7 +1,6 @@
 package com.mediafatigue.snakeeyes;
 
 import java.awt.AWTException;
-import java.awt.Point;
 
 public class MainClass {
 

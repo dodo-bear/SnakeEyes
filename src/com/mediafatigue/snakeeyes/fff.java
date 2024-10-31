@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class IndicatorFrame extends JFrame{
+public class fff extends JFrame{
 
 	/**
 	 * 
@@ -14,7 +14,7 @@ public class IndicatorFrame extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 	
-	public IndicatorFrame(int x, int y) {
+	public fff(int x, int y) {
 		this.setAlwaysOnTop(true);
 		this.setUndecorated(true);
 		this.setBackground(new Color(255, 255, 255, 0));

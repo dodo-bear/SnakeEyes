@@ -3,7 +3,6 @@ package com.mediafatigue.snakeeyes;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -11,9 +10,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class ColorPickerFrame extends JFrame{
 
