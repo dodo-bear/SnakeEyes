@@ -45,14 +45,14 @@ public class SelectionBox {
             }
             previousFrame = box.frame;
 
-            try {
+            /*try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
-            }
+            }*/
         }
-        return null;
+        //return null;
     }
 
     public class CapturePane extends JPanel {
@@ -68,6 +68,7 @@ public class SelectionBox {
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
                         frame.dispose();
+                        frame = null;
                     }
                 }
 
