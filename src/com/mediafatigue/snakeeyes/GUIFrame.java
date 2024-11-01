@@ -26,7 +26,9 @@ public class GUIFrame extends JFrame{
 	private Color snakeColor;
 	private Color fruitColor;
 	private JPanel grid;
-	private JLabel mouseCoords;
+	private JLabel mouseCoords, coordsLabel1, coordsLabel2;
+	
+	private static Thread t;
 	
 	private JTextField coordsHeadx, coordsHeady;
 	
@@ -81,8 +83,8 @@ public class GUIFrame extends JFrame{
 		
 		//Corner coordinate panels/labels
 		JLabel instructions = new JLabel("Please select two sets of pixel coordinates:");
-		JLabel coordsLabel1 = new JLabel("Point 1: 0, 0");
-		JLabel coordsLabel2 = new JLabel("Point 2: 0, 0");
+		coordsLabel1 = new JLabel("Point 1: 0, 0");
+		coordsLabel2 = new JLabel("Point 2: 0, 0");
 		JPanel coordsPanel1 = new JPanel();
 		coordsPanel1.add(coordsLabel1);
 		JPanel coordsPanel2 = new JPanel();
@@ -125,14 +127,9 @@ public class GUIFrame extends JFrame{
 		coordSet.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
 				
-				Rectangle r = SelectionBox.select();
+				new SelectionBox();
 				
-				x1 = r.x;
-				x2 = r.x + r.width;
-				y1 = r.y;
-				y2 = r.y + r.height;
-				coordsLabel1.setText("Point 1: " + x1 + ", " + y1);
-	            coordsLabel2.setText("Point 2: " + x2 + ", " + y2);
+				
 				
 			           /* x1 = ind1.getLocation().x;  
 			            x2 = Integer.max(ind2.getLocation().x, x1);  
@@ -175,6 +172,17 @@ public class GUIFrame extends JFrame{
 			            direction = Integer.parseInt(headDir.getText());
 			            headx = Integer.parseInt(coordsHeadx.getText());
 			            heady = Integer.parseInt(coordsHeady.getText());
+			            try {
+			            	t.interrupt();
+			            } catch(Exception e1) {
+			            	
+			            }
+			            GUIFrame.t = new Thread(() -> {
+			               
+			            	MainClass.continueSkimmer();
+			            });
+			            t.start();
+			            
 			        }  
 			    });
 		
@@ -208,6 +216,7 @@ public class GUIFrame extends JFrame{
 		coordsPanel.add(skButtonPanel);
 		coordsPanel.add(runButtonPanel);
 		coordsPanel.add(grid);
+		grid.setVisible(true);
 		mainpanel.add(coordsPanel);
 		coordsPanel.setBackground(null);
 		instructions.setForeground(Color.black);
@@ -222,6 +231,8 @@ public class GUIFrame extends JFrame{
 		int x = sk.getGrid().length;
 		int y = sk.getGrid()[0].length;
 		labelGrid = new JLabel[x][y];
+		grid.removeAll();
+		grid.repaint();
         grid.setLayout(new GridLayout(x, y));
         for (int i = 0; i < x; i++) {
             for (int n = 0; n < y; n++) {
@@ -229,6 +240,7 @@ public class GUIFrame extends JFrame{
             	grid.add(labelGrid[i][n]);
             }
         }
+        System.out.println("Grid is here");
 	}
 	
 	//Update all debug view JLabels
@@ -241,6 +253,15 @@ public class GUIFrame extends JFrame{
                 labelGrid[n][i].setForeground(sk.getCoGrid()[n][i]);
             }
         }
+	}
+	
+	public void setCoords(Rectangle r) {
+		x1 = r.x;
+		x2 = r.x + r.width;
+		y1 = r.y;
+		y2 = r.y + r.height;
+		coordsLabel1.setText("Point 1: " + x1 + ", " + y1);
+        coordsLabel2.setText("Point 2: " + x2 + ", " + y2);
 	}
 	
 	//Update displayed mouse coordinates

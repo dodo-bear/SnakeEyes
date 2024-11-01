@@ -5,23 +5,22 @@ import java.awt.AWTException;
 public class MainClass {
 
 	private static Skimmer sk;
+	private static GUIFrame frame;
 	
 	private static int headx, heady, dir, destx, desty;
 	
 	public static void main(String[] args) {
 		
-		GUIFrame frame = new GUIFrame("SnakeEyes Controls");
-		
-		//Wait until the user starts the Skimmer via a JButton
-		while(sk == null) {
-			System.out.print("");
-		}
-		
+		frame = new GUIFrame("SnakeEyes Controls");
+	}
+	
+	public static void continueSkimmer() {
 		//Prepare the grid
 		frame.initGrid(sk);
-		
+				
 		//Main loop
 		while(true) {
+			System.out.println("Hi from mainloop, " + frame.isRunning());
 			try {
 				//Refresh all graphics within window
 				frame.refreshMouseCoords();
@@ -31,7 +30,7 @@ public class MainClass {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+					
 			//If bot is running, tell it to make decisions and update values accordingly, otherwise prepare for bot activation.
 			if(frame.isRunning()) {				
 				botLogic(sk.getGrid(), frame);
@@ -67,9 +66,12 @@ public class MainClass {
 		FakeKeyboard.turn(true, dir);
 	}
 	
+	public static GUIFrame getFrame() {
+		return frame;
+	}
+	
 	//Decision making/collision avoidance
 	private static void botLogic(char[][] grid, GUIFrame f) {
-		//System.out.println(headx + ", " + heady);
 		if(sk.getGrid()[destx][desty] == 'S') {//If reached chosen destination
 			headx = destx;
 			heady = desty;

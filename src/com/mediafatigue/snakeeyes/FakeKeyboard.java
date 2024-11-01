@@ -26,6 +26,7 @@ public class FakeKeyboard {
 		int direction = facing;
 		switch(direction) {
 		case 0:
+			
 			if(dir) {
 				rightArrow();
 			} else {

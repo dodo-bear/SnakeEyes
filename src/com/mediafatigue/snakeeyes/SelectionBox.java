@@ -34,26 +34,6 @@ public class SelectionBox {
                 frame.setAlwaysOnTop(true);
                 frame.setVisible(true);
     }
-    
-    public static Rectangle select() {
-    	SelectionBox box = new SelectionBox();
-        Object previousFrame = null;
-
-        while (true) {
-            if (true/*box.frame == null && previousFrame != null*/) {
-                return box.pane.selectionBounds;
-            }
-            previousFrame = box.frame;
-
-            /*try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }*/
-        }
-        //return null;
-    }
 
     public class CapturePane extends JPanel {
 
@@ -68,14 +48,14 @@ public class SelectionBox {
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
                         frame.dispose();
-                        frame = null;
+                        MainClass.getFrame().setCoords(pane.selectionBounds);
                     }
                 }
 
                 @Override
                 public void mousePressed(MouseEvent e) {
                     clickPoint = e.getPoint();
-                    selectionBounds = null;
+                    //selectionBounds = null;
                 }
 
                 @Override
