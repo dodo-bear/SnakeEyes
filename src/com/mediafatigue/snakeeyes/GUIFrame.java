@@ -2,17 +2,22 @@ package com.mediafatigue.snakeeyes;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 
 public class GUIFrame extends JFrame{
 	
@@ -25,7 +30,7 @@ public class GUIFrame extends JFrame{
 	private int x1, y1, x2, y2, xSize, ySize, headx, heady, direction;
 	private Color snakeColor;
 	private Color fruitColor;
-	private JPanel grid;
+	private JPanel grid, bImage;
 	private JLabel mouseCoords, coordsLabel1, coordsLabel2;
 	
 	private static Thread t;
@@ -40,11 +45,12 @@ public class GUIFrame extends JFrame{
 		amIRunning = false;
 		labelGrid = new JLabel[0][0];
 		grid = new JPanel();
+		bImage = new JPanel();
 
 		//JFrame initialization
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(500, 650);
+		setSize(500, 415);
 		
 		//Root panel
 		mainpanel = new JPanel();
@@ -215,7 +221,7 @@ public class GUIFrame extends JFrame{
 		coordsPanel.add(headDirPanel);
 		coordsPanel.add(skButtonPanel);
 		coordsPanel.add(runButtonPanel);
-		coordsPanel.add(grid);
+		coordsPanel.add(bImage);
 		grid.setVisible(true);
 		mainpanel.add(coordsPanel);
 		coordsPanel.setBackground(null);
@@ -241,6 +247,13 @@ public class GUIFrame extends JFrame{
             }
         }
         System.out.println("Grid is here");
+	}
+	
+	public void refreshImage(BufferedImage image) {
+		bImage.removeAll();
+		int newW = this.getWidth()*3/4;
+		int newH = (int)((double)newW/(double)image.getWidth() * image.getHeight());
+		bImage.add(new JLabel(new ImageIcon(resize(image, newW, newH))));
 	}
 	
 	//Update all debug view JLabels
@@ -272,6 +285,20 @@ public class GUIFrame extends JFrame{
 	public void refreshHeadCoords(int x, int y) {
 		coordsHeadx.setText(""+x);
 		coordsHeady.setText(""+y);
+	}
+	
+	public static BufferedImage resize(BufferedImage img, int newWidth, int newHeight) { 
+	    Image tmp = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+	    BufferedImage dimg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+
+	    Graphics2D g2d = dimg.createGraphics();
+	    g2d.drawImage(tmp, 0, 0, null);
+	    g2d.dispose();
+
+	    return dimg;
+	} 
+	public JPanel getBImage() {
+		return bImage;
 	}
 	
 	public int getDirection() {

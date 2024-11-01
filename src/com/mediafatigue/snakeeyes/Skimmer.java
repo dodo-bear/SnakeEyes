@@ -15,7 +15,7 @@ public class Skimmer {
 	private char[][] grid;
 	private Color[][] coGrid;
 	
-	private int columns, rows, corner1Height, corner1Distance;
+	private int columns, rows, corner1Height, corner1Distance, corner2Distance, corner2Height;
 	
 	private Color snakeColor;
 	private Color fruitColor;
@@ -34,12 +34,14 @@ public class Skimmer {
 		this.rows = rows;
 		this.corner1Height = corner1Height;
 		this.corner1Distance = corner1Distance;
+		this.corner2Height = corner2Height;
+		this.corner2Distance = corner2Distance;
 		this.snakeColor = snakeColor;
 		this.fruitColor = fruitColor;
 	}
 	
 	//Turn screen data into useful array
-	public void captureToGrid() throws AWTException {
+	public BufferedImage captureToGrid() throws AWTException {
 		//Create new buffered image
 		Robot robot = new Robot();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -67,6 +69,7 @@ public class Skimmer {
 				
 			}
 		}
+		return screenshot.getSubimage(corner1Distance, corner1Height, corner2Distance - corner1Distance, corner2Height - corner1Height);
 	}
 	
 	//Condense cell into single color value

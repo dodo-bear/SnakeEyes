@@ -1,11 +1,14 @@
 package com.mediafatigue.snakeeyes;
 
 import java.awt.AWTException;
+import java.awt.image.BufferedImage;
 
 public class MainClass {
 
 	private static Skimmer sk;
 	private static GUIFrame frame;
+	private static Thread t;
+	private static BufferedImage display;
 	
 	private static int headx, heady, dir, destx, desty;
 	
@@ -16,16 +19,27 @@ public class MainClass {
 	
 	public static void continueSkimmer() {
 		//Prepare the grid
-		frame.initGrid(sk);
+		//frame.initGrid(sk);
+		display = null;
+		t = new Thread();
+		try {
+			display = sk.captureToGrid();
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		frame.refreshImage(display);
+		
+		frame.setBounds(frame.getWidth(), frame.getHeight() + frame.getBImage().getHeight());
 				
 		//Main loop
 		while(true) {
-			System.out.println("Hi from mainloop, " + frame.isRunning());
 			try {
 				//Refresh all graphics within window
 				frame.refreshMouseCoords();
-				sk.captureToGrid();
-				frame.refreshGrid(sk);
+				display = sk.captureToGrid();
+				frame.refreshImage(display);
+				//frame.refreshGrid(sk);
 			} catch (AWTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -33,7 +47,7 @@ public class MainClass {
 					
 			//If bot is running, tell it to make decisions and update values accordingly, otherwise prepare for bot activation.
 			if(frame.isRunning()) {				
-				botLogic(sk.getGrid(), frame);
+				botLogic(sk.getGrid());
 				frame.refreshHeadCoords(headx, heady);
 			} else {
 				dir = frame.getDirection();
@@ -71,7 +85,7 @@ public class MainClass {
 	}
 	
 	//Decision making/collision avoidance
-	private static void botLogic(char[][] grid, GUIFrame f) {
+	private static void botLogic(char[][] grid) {
 		if(sk.getGrid()[destx][desty] == 'S') {//If reached chosen destination
 			headx = destx;
 			heady = desty;

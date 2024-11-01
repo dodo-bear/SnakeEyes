@@ -8,6 +8,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
@@ -42,14 +44,12 @@ public class SelectionBox {
 
         public CapturePane() {
             setOpaque(false);
+            setFocusable(true);
            
             MouseAdapter mouseHandler = new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
-                        frame.dispose();
-                        MainClass.getFrame().setCoords(pane.selectionBounds);
-                    }
+                    
                 }
 
                 @Override
@@ -74,7 +74,34 @@ public class SelectionBox {
                     repaint();
                 }
             };
+            
+            KeyListener kl = new KeyListener() {
 
+				@Override
+				public void keyTyped(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					System.out.println("Coordinates logged");
+					if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						frame.dispose();
+                        MainClass.getFrame().setCoords(pane.selectionBounds);
+					}
+					
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+            	
+            };
+
+            addKeyListener(kl);
             addMouseListener(mouseHandler);
             addMouseMotionListener(mouseHandler);
         }
